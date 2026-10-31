@@ -27,8 +27,7 @@ if 'vendors' not in st.session_state:
 with st.sidebar:
     st.image("https://cdn-icons-png.flaticon.com/512/892/892458.png", width=60)
     st.title("SAAS.SCM.V3")
-    st.caption("Prototype Fashion Garment Market Control
-Autonomous + Accurate")
+    st.caption("Prototype Fashion Garment Market Control - Autonomous + Accurate")
     menu = st.radio("Navigasi", [
         "Dashboard Accurate",
         "Master Bahan Baku (Bal-Balan)",
@@ -125,9 +124,8 @@ elif menu == "Vendor & Supplier Notes (Accurate Style)":
         with st.expander(f"{v['nama']} - {v['kategori']} | Hutang: Rp {v['saldo']:,}"):
             c1,c2 = st.columns([2,1])
             with c1:
-                st.text(f"Alamat: {v['alamat']}
-Email terdaftar: {v['email']}
-Phone: {v['phone']}")
+                st.text(f"""Alamat: {v['alamat']}
+Email terdaftar: {v['email']} | Phone: {v['phone']}""")
                 notes = st.text_area(f"Notes lembar halaman {v['nama']}", value=v['notes'], key=f"notes_{i}", height=100)
                 if st.button(f"Simpan Notes {v['nama']}", key=f"save_{i}"):
                     st.session_state.vendors[i]['notes']=notes
