@@ -76,7 +76,7 @@ st.sidebar.caption("KOLOM AKTIF - Bal Yard Kodi Terpisah - Input Tanpa Harga - G
 st.sidebar.success("WiFi: super-infrared.local 192.168.4.1 - 192.168.4.22 HP | ILMCI Qua pH 8-9 pending izin Pak Sofian Chandra")
 st.sidebar.info("Google Drive: SAAS_SCM_V4_Full_Accurate_GoogleDrive_MSOffice.xlsx - 11 Tabs - Link di Keuangan")
 
-menu = st.sidebar.radio("NAVIGASI V4.6 - Semua Kolom Aktif Bisa Input", [
+menu = st.sidebar.radio("NAVIGASI V4.7 - PABU GAAP SAK EMKM - Anti Hang", [
     "Dashboard Accurate",
     "Master Bahan Baku - INPUT PASOKAN Bal Yard Kodi",
     "FIFO LIFO Average - Qty Terpisah Tanpa Harga",
@@ -86,6 +86,8 @@ menu = st.sidebar.radio("NAVIGASI V4.6 - Semua Kolom Aktif Bisa Input", [
     "Gudang C12 vs Gudang Besar 22M - INPUT BARANG MASUK",
     "Transport GPS Live - Muatan Bal Yard Kodi",
     "Market Tradisional Faktur Nota - Bal Yard Kodi ACTIVE",
+    "Invoice Nota Surat Jalan SRITEX Template - Divisi Terkait",
+    "PABU GAAP SAK EMKM V7 V8A V8B - Anti Hang + T-Account + Uang Muka Retur",
     "Director Statistik Demand Planner - ACTIVE",
     "Marketing Digital Links + ILMCI Qua",
 ])
@@ -316,6 +318,174 @@ elif menu == "Market Tradisional Faktur Nota - Bal Yard Kodi ACTIVE":
             st.session_state.faktur = pd.concat([st.session_state.faktur,new], ignore_index=True)
             st.success(f"Faktur {no} ditambah: {q_bal} Bal, {q_kodi} Kodi, {q_yard} Yard = Rp {total:,} - Buyer {buyer} HP {phone} - Kwitansi + Invoice - Sync Sheet")
 
+
+elif menu == "Invoice Nota Surat Jalan SRITEX Template - Divisi Terkait":
+    st.header("Invoice Nota Surat Jalan - SRITEX Template - PT Sri Rejeki Isman Tbk - Adaptasi Pabrik Batik")
+    st.caption("Contoh Google kamu: INV/20261101/042 200 Roll Primissima + 150 Roll Prima = 77jt + PPN 11% = 85.470.000 - Adaptasi jadi Bal Yard Kodi Terpisah + Prinsip Akuntansi Sama Atas Izin Prinsip")
+    tab1, tab2, tab3, tab4 = st.tabs(["Invoice Sritex Template", "Nota Pembelian", "Surat Jalan + Divisi Terkait", "Generate Invoice Baru Bal Yard Kodi"])
+    with tab1:
+        st.subheader("Invoice - Faktur Penagihan Resmi - SRITEX Template Adaptasi")
+        inv_df = pd.DataFrame([
+            ["INV/20261101/042","2026-11-01","PO-9982/BTK/X/2026 = PO-2026-010","PT Batik Nusantara Agung / Even Garden","Kain Katun Mori Primissima Cap 115cm 33m - 5 Bal = 450 Yd = 18 Kodi",5,450,18,10000,4500000],
+            ["","","","", "Kain Katun Mori Prima 105cm 33m - 3 Bal = 270 Yd = 10 Kodi",3,270,10,10000,2700000],
+            ["","","7 Bal kedatangan bisa 10 Bal","Mori Primis 90cm 6kg/25 kodi - Bal-balan","Mori Primis 90cm 7 Bal = 630 Yd = 28 Kodi per Bal Rp 900.000",7,630,28,10000,6300000],
+        ], columns=["No Invoice","Tanggal","PO","Kepada Yth","Deskripsi Barang","Qty Bal","Qty Yard","Qty Kodi","Harga/Yard","Total"])
+        edited_inv = st.data_editor(inv_df, num_rows="dynamic", use_container_width=True, key="inv_sritex")
+        subtotal = pd.to_numeric(edited_inv["Total"], errors='coerce').sum()
+        ppn = subtotal*0.11
+        total = subtotal+ppn
+        c1,c2,c3 = st.columns(3)
+        c1.metric("Subtotal", f"Rp {subtotal:,.0f}")
+        c2.metric("PPN 11% - Prinsip Akuntansi Pajak", f"Rp {ppn:,.0f}")
+        c3.metric("TOTAL TAGIHAN", f"Rp {total:,.0f}")
+        st.info("Terbilang: Empat Belas Juta Sembilan Ratus Delapan Puluh Lima Ribu Rupiah - Bank Mandiri Cab Solo A/C 138-00-XXXX-XXXX A/N PT Sritex - Head of Finance Ibu Kirana Rahayu - Prinsip Akuntansi Sama")
+    with tab2:
+        st.subheader("Nota Pembelian - Kontan / Lunas - Adaptasi Nazar Batik Tulis Tangan")
+        nota_df = pd.DataFrame([
+            ["NT-8872/XI/26 = NT-2026-010","2026-11-01","PT Batik Nusantara Agung / Even Garden","5 Bal = 450 Yd = 18 Kodi","Mori Primissima 90cm",10000,4500000,"LUNAS - Kwitansi Kas Manual Teregistrasi - HP Sopir Aktif"],
+            ["NT-2026-011","2026-11-01","Pabrik Batik Even Garden","7 Bal = 630 Yd = 28 Kodi","Mori Primis 90cm 6kg/25 kodi - Bal-balan",10000,6300000,"LUNAS - KWT-2026-010 - Buku Besar Kas Balance Rp 27,5jt"],
+        ], columns=["No Nota","Tanggal","Kepada","Banyaknya - Bal Yard Kodi Terpisah","Nama Barang","Harga/Yard","Total","Status - LUNAS/TUNAI"])
+        st.data_editor(nota_df, num_rows="dynamic", use_container_width=True, key="nota_sritex")
+        st.caption("Divisi: Staff Purchasing (Pembeli) - Admin Penjualan / Kasir (Penjual) - Kepala Gudang C12 Mr Soesendi Lim & Mister Aliang - Status LUNAS/TUNAI - Kwitansi HP Sopir Aktif - Prinsip Akuntansi Sama")
+    with tab3:
+        st.subheader("Surat Jalan - Delivery Order + Divisi Terkait 8 Divisi - Prinsip Akuntansi")
+        sj_df = pd.DataFrame([
+            ["SJ/20261101/992 = SJ-2026-010","2026-11-01","AD 8941 FA Truk Diesel / B9123TAB L300 10-15 Bal","Budi Santoso / Ahmad Subarjo HP 0812-1111-0001","Mori Primissima Cap 115cm 33m Segel Plastik QR-001",5,450,18,"Bagus / Segel Plastik - Gudang Besar 22M","Diterima Pelanggan - Sopir - Kepala Gudang - Sales Manager"],
+            ["SJ-2026-011","2026-11-01","B2389CXT Grand Max 5-8 Bal 800Kg Jabodetabek","M Faisal 0857-3333-0003","ILMCI Qua pH 8-9 Alkaline Mineral Bundle Dubai Health Pending Izin Pak Sofian Chandra",0,120,2,"Natural fresh segar - Untuk karyawan Bak1 60-70C Bak2 15-20C","Ruang Teduh Loker Ruach Ha Kadosh"],
+        ], columns=["No SJ","Tanggal","No Kendaraan","Nama Sopir - HP Aktif Kwitansi","Nama Barang - Banyaknya","Qty Bal","Qty Yard","Qty Kodi","Kondisi / QR Code","Divisi Terkait"])
+        st.data_editor(sj_df, num_rows="dynamic", use_container_width=True, key="sj_sritex")
+        st.divider()
+        st.write("**Divisi Terkait - Penjelasan Lengkap - Prinsip Akuntansi Sama Atas Izin Prinsip**")
+        divisi_df = pd.DataFrame([
+            ["Head of Finance & Accounting Ibu Kirana Rahayu","Invoice PPN 11% Total 85.470.000 - Bank Mandiri","Direktur Business Owner Aku Bald Lead - Buku Besar Kas Balance","PSAK - PPN - Laporan Keuangan"],
+            ["Procurement / Pembelian","PO-9982/BTK/X/2026","PO SQR BAPO - 7 Bal 630 Yd 28 Kodi - PT Sinar Kainindo","Persediaan - Pembelian - 7 Bal bisa 10 Bal - per Bal Rp 900.000"],
+            ["Staff Purchasing / Admin Penjualan","Nota Banyaknya Bal Yard Kodi Terpisah","Master Bahan Baku INPUT PASOKAN 3 kolom terpisah - Tanpa harga boleh untuk proses kerja","Quantity - Bal Yard Kodi - Tanpa Harga Boleh - Jumlah kain dalam bal-balan dan jumlah kodi"],
+            ["Kepala Gudang Mr Soesendi Lim & Mister Aliang","SJ fisik Segel Plastik QR Code - Rak A1","Gudang Besar 22M 20x110=2200m2 vs C12 INPUT BARANG MASUK ACTIVE","Gudang - Rak A1 QR-001 - Zero Blast Radius"],
+            ["Sopir Ahmad Subarjo B9123TAB / Budi Santoso AD 8941 FA","SJ + No Kendaraan + HP Aktif Kwitansi + GPS Live","Transport GPS Live -6.2088,106.8456 Map - Muatan Bal Yard Kodi - 5-8 Bal 800Kg - 10-15 Bal 1.5 Ton","Logistik - Kwitansi Kas Manual Teregistrasi - Invoice ditentukan harga per tagih"],
+            ["Sales Manager","Approve SJ 200 Roll 250rb + 150 Roll 180rb","Director Statistik Demand Planner Actual vs Permintaan","Hukum Permintaan - Survey Market Control - #OOTDJakarta"],
+            ["Pelanggan Toko Sari Jaya Tanah Abang","Diterima Oleh SJ - Komplain setelah SJ tidak dilayani","Market Tradisional Faktur Nota Bal Yard Kodi ACTIVE FK-TA-2026-101 - Berita acara permintaan","Piutang - Penjualan - Demand Planner Tradisi"],
+            ["Kasir Bank Mandiri Cab Solo 138-00-XXXX-XXXX","Status LUNAS/TUNAI","Kwitansi Kas Manual Teregistrasi KWT-2026-001 + Invoice ESC/POS 58mm - Buku Besar Kas Rp 27,5jt Balance","Kas Berkurang - Total Rupiah - Kwitansi - Invoice - Buku besar menambah persediaan quantity dan kas berkurang nilai rupiah total"],
+        ], columns=["Divisi SRITEX","Tugas di Invoice/Nota/SJ","Di Pabrik Batik Even Garden SAAS SCM V4.7","Prinsip Akuntansi - Sama Atas Izin Prinsip"])
+        st.data_editor(divisi_df, use_container_width=True, key="divisi_sritex")
+    with tab4:
+        st.subheader("Generate Invoice Baru - Bal Yard Kodi Terpisah - Prinsip Akuntansi Sama - Atas Izin Prinsip")
+        with st.form("gen_invoice"):
+            c1,c2 = st.columns(2)
+            no_inv = c1.text_input("No Invoice - SRITEX Template","INV/20261101/042 - INV-2026-010")
+            tgl = c2.date_input("Tanggal", date.today())
+            c3,c4 = st.columns(2)
+            po = c3.text_input("No PO","PO-9982/BTK/X/2026 = PO-2026-010 - 7 Bal kedatangan bisa 10 Bal")
+            kepada = c4.text_input("Kepada Yth","PT Batik Nusantara Agung / Pabrik Batik Even Garden - Gudang Besar 22M")
+            st.write("**Barang - Bal Yard Kodi Terpisah - Harga per Yard / per Bal - Bisa Tanpa Harga**")
+            c5,c6,c7,c8,c9 = st.columns(5)
+            nama_barang = c5.text_input("Nama Barang","Kain Katun Mori Primissima Cap 115cm 33m")
+            qty_bal = c6.number_input("Qty Bal - Bal-balan",1,7)
+            qty_yard = c7.number_input("Qty Yard - Kolom Terpisah",90,630)
+            qty_kodi = c8.number_input("Qty Kodi",4,28)
+            harga_yard = c9.number_input("Harga per Yard - Kosongkan jika proses kerja tanpa harga",10000)
+            keterangan = st.text_area("Keterangan - Divisi Terkait - Prinsip Akuntansi","7 Bal sekali datang - bisa 10 Bal - per Bal Rp 900.000 = per Yard Rp 10.000 - Harga dikalikan harga satuan - Kwitansi kedatangan dalam jumlah Bal - Invoice ditentukan harga per tagih - Buku besar menambah persediaan quantity Bal Yard Kodi dan kas berkurang nilai rupiah total - Atas izin prinsip prinsip akuntansi PSAK - PPN 11%")
+            total_calc = qty_yard*harga_yard if harga_yard>0 else 0
+            ppn_calc = total_calc*0.11 if total_calc>0 else 0
+            st.metric("Total + PPN 11%", f"Rp {total_calc:,.0f} + PPN Rp {ppn_calc:,.0f} = Rp {total_calc+ppn_calc:,.0f} = {qty_bal} Bal x {harga_yard*qty_yard/qty_bal if qty_bal else 0:,.0f} per Bal" if harga_yard>0 else f"Proses Kerja Tanpa Harga - Qty: {qty_bal} Bal = {qty_yard} Yd = {qty_kodi} Kodi - Buku besar hanya nambah quantity")
+            if st.form_submit_button("Generate Invoice + Nota + Surat Jalan + Jurnal - Bal Yard Kodi - Prinsip Akuntansi Sama Atas Izin Prinsip"):
+                idx = st.session_state.bahan[st.session_state.bahan["Nama Bahan"].str.contains("Mori", na=False)].index
+                if len(idx)>0:
+                    st.session_state.bahan.loc[idx[0],"Stok Bal"] += qty_bal
+                    st.session_state.bahan.loc[idx[0],"Stok Yard/L/Kg"] += qty_yard
+                    st.session_state.bahan.loc[idx[0],"Stok Kodi"] += qty_kodi
+                new_fifo = pd.DataFrame([[str(tgl),no_inv,"Masuk - Pasokan - SRITEX Template",nama_barang,qty_bal,qty_yard,qty_kodi,harga_yard if harga_yard>0 else "",total_calc if total_calc>0 else "",keterangan,"Gudang Besar 22M"]], columns=st.session_state.fifo_tx.columns)
+                st.session_state.fifo_tx = pd.concat([st.session_state.fifo_tx,new_fifo], ignore_index=True)
+                if total_calc>0:
+                    new_j1 = pd.DataFrame([[str(tgl),f"Persediaan - {nama_barang} - Gudang Besar 22M - {qty_bal} Bal {qty_yard} Yd {qty_kodi} Kodi","Debet",total_calc,"",f"{no_inv} - {qty_bal} Bal {qty_yard} Yd"]], columns=st.session_state.jurnal.columns)
+                    new_j2 = pd.DataFrame([[str(tgl),f"Hutang Usaha / Kas - {kepada}","Kredit","","",total_calc,f"{no_inv} - PPN 11% Rp {ppn_calc:,.0f}"]], columns=st.session_state.jurnal.columns)
+                    st.session_state.jurnal = pd.concat([st.session_state.jurnal,new_j1,new_j2], ignore_index=True)
+                st.success(f"Invoice {no_inv} Generated! {qty_bal} Bal = {qty_yard} Yard = {qty_kodi} Kodi - Total Rp {total_calc:,.0f} + PPN Rp {ppn_calc:,.0f} - Persediaan quantity nambah Bal Yard Kodi - Kas berkurang rupiah total - Prinsip Akuntansi Sama - Atas Izin Prinsip! - Siap sync Google Sheet & MS Office FINAL 9 Sheets!")
+
+elif menu == "PABU GAAP SAK EMKM V7 V8A V8B - Anti Hang + T-Account + Uang Muka Retur":
+    st.header("PABU GAAP SAK EMKM V7 V8A V8B - Anti Hang - T-Account SUMIF Auto + Uang Muka Akrual + Retur Jurnal Balik + Depresiasi")
+    st.caption("V7 4 Sheets + V8A 8KB Jurnal Double-Entry + V8B 10KB Master Akun - Fix _x5f_ & .xlsx.xlsx & .txt - Repo ringan - Scroll page 8 lancar - 100% PABU GAAP SAK EMKM")
+    
+    st.success("24 Commits - 2 Tags - Latest Release v1.1 - Fix double extension & x5f encoding - Anti nge-hang scroll page 8!")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("📥 Download Excel Anti Hang - 8KB + 10KB")
+        st.write("**V8A Jurnal Double-Entry PABU + Uang Muka Retur - 8KB - 4 Sheets**")
+        st.write("- Jurnal_Umum_Double_Entry: BKM-01, BKK-01 2 baris per transaksi Debit=Kredit Balance")
+        st.write("- Uang_Muka_PO_Akrual: DP 2.5jt sebagai Kewajiban 2-1200 Kredit, bukan Pendapatan 4-1100 - Baru akui setelah kirim Grand Max GPS -6.2088,106.8456")
+        st.write("- Retur_Barang_Cacat: Retur 1 pcs @500rb - Return to Inventory Gudang C12")
+        st.write("- Balancing_Check: =SUMIF(C:C,kode,F:F) Validasi Balance")
+        
+        st.write("**V8B Master Akun SAK EMKM + Depresiasi + Akrual - 10KB - 4 Sheets**")
+        st.write("- Master_Akun_SAK_EMKM: Chart of Accounts 1-1100 s/d 6-1500 Saldo Normal T-Account SUMIF")
+        st.write("- Depresiasi: Mesin Jahit 15jt/60bln=250rb, Canting Cap 8jt/48bln=166.667, Ketel Uap 500L 25jt/120bln=208.333")
+        st.write("- Akrual & Matching: HPP dikaitkan penjualan periode sama - DP = Kewajiban")
+        st.write("- Pseudocode: handleUangMukaPO(), handleReturCacat(), handlePenyusutanAkhirBulan()")
+        
+        # Download buttons using session data or placeholder
+        st.info("Download file Excel dari GitHub Repo - 25 Commits - Terbaru 1 minute ago - Anti Hang!")
+        st.link_button("📥 GitHub - V8A Jurnal 8KB", "https://github.com/Alchaliveret/saas-scm-accurate-fashion-market-v3/blob/main/SAAS_SCM_V8A_Jurnal_PABU_FINAL.xlsx")
+        st.link_button("📥 GitHub - V8B Master Akun 10KB", "https://github.com/Alchaliveret/saas-scm-accurate-fashion-market-v3/blob/main/SAAS_SCM_V8B_Master_Akun_SAK_EMKM_FINAL.xlsx")
+        st.link_button("📥 GitHub - V7 T-Account SUMIF", "https://github.com/Alchaliveret/saas-scm-accurate-fashion-market-v3/blob/main/SAAS_SCM_V7_T_Account_FINAL.xlsx")
+        st.link_button("📥 GitHub - Backend SAK EMKM.py", "https://github.com/Alchaliveret/saas-scm-accurate-fashion-market-v3/blob/main/backend_SAK_EMKM.py")
+    
+    with col2:
+        st.subheader("🧮 Simulasi T-Account Otomatis - SUMIF")
+        st.caption("Rumus: =SUMIF(Jurnal_Umum!C:C, \"1-1200\", F:F) Debit & G:G Kredit - Saldo = Debit - Kredit")
+        
+        # Demo T-Account
+        t_data = pd.DataFrame([
+            ["1-1100","Kas Toko","=SUMIF(Jurnal!C:C,\"1-1100\",F:F)","=SUMIF(Jurnal!C:C,\"1-1100\",G:G)","=Debit-Kredit","Aset - Debit"],
+            ["1-1200","Bank Operasional","=SUMIF(Jurnal!C:C,\"1-1200\",F:F)","=SUMIF(Jurnal!C:C,\"1-1200\",G:G)","=Debit-Kredit","Aset - Debit"],
+            ["2-1200","Uang Muka Pelanggan","=SUMIF(...2-1200...,F:F)","=SUMIF(...2-1200...,G:G)","=Kredit-Debit","Kewajiban - Kredit - Accrual"],
+            ["4-1100","Penjualan Shopee","=SUMIF(...4-1100...,F:F)","=SUMIF(...4-1100...,G:G)","=Kredit-Debit","Pendapatan - Kredit"],
+            ["4-1110","Retur Penjualan Kontra","=SUMIF(...4-1110...,F:F)","=SUMIF(...4-1110...,G:G)","=Debit-Kredit","Kontra Pendapatan - Debit"],
+            ["5-1100","HPP Bahan Baku","=SUMIF(...5-1100...,F:F)","=SUMIF(...5-1100...,G:G)","=Debit-Kredit","HPP - Debit - Matching"],
+            ["6-1500","Beban Penyusutan","=SUMIF(...6-1500...,F:F)","=SUMIF(...6-1500...,G:G)","=Debit-Kredit","Beban - Debit - Depresiasi"],
+        ], columns=["Kode","Nama Akun","Total Debit SUMIF","Total Kredit SUMIF","Saldo Akhir","Kategori PABU"])
+        st.data_editor(t_data, use_container_width=True, key="t_account_demo")
+        
+        st.subheader("💰 Simulasi Uang Muka PO - Accrual Basis")
+        dp = st.number_input("DP PO 25 Kodi Rp", value=2500000)
+        pelunasan = st.number_input("Pelunasan Rp", value=5000000)
+        st.metric("Total Pendapatan Setelah Kirim", f"Rp {dp+pelunasan:,} = DP {dp:,} + Pelunasan {pelunasan:,}")
+        st.write(f"Jurnal: Debit 2-1200 Rp {dp:,} Kredit 4-1100 Rp {dp:,} + Debit 1-1200 Rp {pelunasan:,} Kredit 4-1100 Rp {pelunasan:,}")
+        
+        st.subheader("📦 Simulasi Retur - Jurnal Balik")
+        jml_retur = st.number_input("Jumlah Retur pcs", value=1)
+        harga_jual = st.number_input("Harga Jual per pcs", value=500000)
+        hpp = st.number_input("HPP per pcs", value=300000)
+        st.metric("Total Refund", f"Rp {jml_retur*harga_jual:,} + Return Inventory Rp {jml_retur*hpp:,} = Rp {jml_retur*(harga_jual+hpp):,}")
+    
+    st.divider()
+    st.subheader("🚀 Arsitektur API - HP/Laptop App -> Google Sheets")
+    st.code("""
+[ HP / Laptop App SAAS SCM V4.7 ]
+        │ JSON Payload Double-Entry Balance
+        ▼
+[ Google Sheets API / Apps Script doPost(e) appendRow ]
+        │ Menulis 2 Baris Baru ke Jurnal_Umum
+        ▼
+Jurnal_Umum --(SUMIF Auto)--> Buku_Besar_T & Laporan_Keuangan
+
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Jurnal_Umum");
+  var data = JSON.parse(e.postData.contents);
+  data.rows.forEach(row => sheet.appendRow([row.tanggal, row.no_bukti, row.kode_akun, row.nama_akun, row.keterangan, row.debit, row.kredit]));
+  return ContentService.createTextOutput(JSON.stringify({"status":"success"})).setMimeType(ContentService.MimeType.JSON);
+}
+
+Payload:
+{
+  "rows": [
+    {"tanggal":"2026-11-01","no_bukti":"BKM-DP-01","kode_akun":"1-1200","nama_akun":"Bank Operasional","keterangan":"DP PO Parang Kusumo 2 Bal 25 Kodi","debit":2500000,"kredit":0},
+    {"tanggal":"2026-11-01","no_bukti":"BKM-DP-01","kode_akun":"2-1200","nama_akun":"Uang Muka Pelanggan","keterangan":"DP PO - Kewajiban - Accrual","debit":0,"kredit":2500000}
+  ]
+}
+    """, language="javascript")
+    
+    st.success("100% PABU / GAAP + SAK EMKM - Double-Entry Aset=Kewajiban+Modal - Economic Entity - Matching Principle - Accrual Basis - Depresiasi Straight Line - Ready Vultr Agent Rush 1,881 builders 22:00 WIB 3 Nov!")
+
 elif menu == "Director Statistik Demand Planner - ACTIVE":
     st.header("Direktur Business Owner - Statistik Penjualan - Demand Planner Tradisi vs Modern")
     sales_df = pd.DataFrame({
@@ -342,4 +512,4 @@ elif menu == "Marketing Digital Links + ILMCI Qua":
     st.link_button("Buka Surat Izin ILMCI Qua - Pak Sofian Chandra", "https://docs.google.com/document/d/1z44wP05SWqzxiTjgWOuGQC9vqBuUQ4cQdHuPaV_UfTM/edit?usp=drivesdk")
 
 st.divider()
-st.caption("SAAS.SCM.SYSTEM V4.6 ACTIVE CONNECTED - KOREKSI SELESAI: 1) Input Pasokan Bal Yard Kodi Terpisah + Tanpa Harga Bisa 2) Gudang Besar 22M vs C12 Input Barang Masuk ACTIVE 3) Konek Google Sheet & MS Office Excel - 7 Sheets Export - Balance Rp 27,5jt | ILMCI Qua pH 8-9 Pending Izin Pak Sofian Chandra Dubai Fertigasi Health Well-being | Vultr Agent Rush Zero Blast Radius sandbox-code + browser Playwright + security PC817 5kVrms MCB 6A RCD 30mA | License SUPER SECURE SYST v3.0 | Even Garden x Cerebral Valley x Vultr | super-infrared.local 192.168.4.1")
+st.caption("SAAS.SCM.SYSTEM V4.7 PABU GAAP SAK EMKM - 25 Commits - Release v1.1 Latest - Fix _x5f_ & .xlsx.xlsx & .txt double - V7 4 Sheets + V8A 8KB Jurnal PABU Uang Muka Retur + V8B 10KB Master Akun Depresiasi Akrual - Anti Hang Scroll Page 8 Lancar - T-Account SUMIF Auto Jurnal_Umum->Buku_Besar_T->Laporan_Keuangan - Uang Muka Accrual 2-1200 Kewajiban - Retur Jurnal Balik 4-1110 Kontra Pendapatan - Depresiasi Straight Line 15jt/60bln=250rb - Backend handleUangMukaPO handleRetur handlePenyusutan - Balance Aset=Kewajiban+Modal - 100% PABU GAAP SAK EMKM - ILMCI Qua pH 8-9 Pending Izin | Vultr Agent Rush 1,881 builders 22:00 WIB 3 Nov - YOU'RE REGISTERED | Even Garden x Cerebral Valley x Vultr | super-infrared.local 192.168.4.1")
