@@ -280,8 +280,7 @@ elif menu == "Transport GPS Live - Muatan Bal Yard Kodi":
     if st.button("Simpan Transport - Bal Yard Kodi"):
         st.session_state.sopir = edited_s
         st.success("Transport GPS + Muatan Bal Yard Kodi tersimpan - HP aktif muncul di kwitansi")
-        # === FIX LINE 283 - Transport GPS Live - Muatan Bal Yard Kodi - ANTI HANG V2 - FIX SYNTAX ===
-    # GANTI SEMUA DARI LINE 283 SAMPAI 301 DENGAN INI (indent 4 spasi di dalam if menu Transport):
+            # === FIX V3 - Transport GPS Live - Map butuh lat lon kecil ===
     try:
         if 'edited_s' in locals() and not edited_s.empty and "Lat" in edited_s.columns and "Lon" in edited_s.columns:
             map_df = edited_s[["Lat","Lon"]].copy()
@@ -289,18 +288,21 @@ elif menu == "Transport GPS Live - Muatan Bal Yard Kodi":
             map_df["Lon"] = pd.to_numeric(map_df["Lon"], errors='coerce')
             map_df = map_df.dropna()
             if not map_df.empty:
-                st.map(map_df)
-                st.caption(f"GPS Live: {len(map_df)} titik - Ahmad Subarjo On the way Tanah Abang 12km")
+                # Streamlit maunya lat lon kecil!
+                map_df_small = pd.DataFrame({"lat": map_df["Lat"], "lon": map_df["Lon"]})
+                st.map(map_df_small)
+                st.caption(f"GPS Live: {len(map_df_small)} titik - Ahmad Subarjo On the way Tanah Abang 12km")
             else:
                 st.warning("GPS Lat/Lon belum valid - isi contoh -6.2088,106.8456 (UNIKA Atma Jaya)")
-                st.map(pd.DataFrame([{"Lat": -6.2088, "Lon": 106.8456}]))
+                st.map(pd.DataFrame([{"lat": -6.2088, "lon": 106.8456}]))
         else:
             st.info("Belum ada data Transport GPS Live - isi Sopir + Muatan Bal Yard Kodi dulu")
-            st.map(pd.DataFrame([{"Lat": -6.2088, "Lon": 106.8456}]))
+            st.map(pd.DataFrame([{"lat": -6.2088, "lon": 106.8456}]))
     except Exception as e:
         st.warning(f"Map fallback: {e}")
-        st.map(pd.DataFrame([{"Lat": -6.2088, "Lon": 106.8456}]))
-    # === END FIX V2 ===
+        st.map(pd.DataFrame([{"lat": -6.2088, "lon": 106.8456}]))
+    # === END FIX V3 ===
+
 
 
 
