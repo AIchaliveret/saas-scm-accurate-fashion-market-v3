@@ -280,28 +280,28 @@ elif menu == "Transport GPS Live - Muatan Bal Yard Kodi":
     if st.button("Simpan Transport - Bal Yard Kodi"):
         st.session_state.sopir = edited_s
         st.success("Transport GPS + Muatan Bal Yard Kodi tersimpan - HP aktif muncul di kwitansi")
-    # === FIX LINE 283 - Transport GPS Live - Muatan Bal Yard Kodi - ANTI HANG ===
-# GANTI DARI:
-# st.map(edited_s[["Lat","Lon"]])
-
-# MENJADI INI (copy paste full):
-if 'edited_s' in locals() and not edited_s.empty and "Lat" in edited_s.columns and "Lon" in edited_s.columns:
-    map_df = edited_s[["Lat","Lon"]].copy()
-    map_df["Lat"] = pd.to_numeric(map_df["Lat"], errors='coerce')
-    map_df["Lon"] = pd.to_numeric(map_df["Lon"], errors='coerce')
-    map_df = map_df.dropna()
-    if not map_df.empty:
-        st.map(map_df)
-        st.caption(f"GPS Live: {len(map_df)} titik - Contoh Ahmad Subarjo On the way Tanah Abang Blok F/B 12km ETA 25min")
-    else:
-        st.warning("GPS Lat/Lon belum ada data valid - isi dulu contoh -6.2088,106.8456 (UNIKA Atma Jaya) di kolom Lat Lon tabel di atas")
-        # Fallback biar tidak merah - tampilkan Jakarta pusat
+        # === FIX LINE 283 - Transport GPS Live - Muatan Bal Yard Kodi - ANTI HANG V2 - FIX SYNTAX ===
+    # GANTI SEMUA DARI LINE 283 SAMPAI 301 DENGAN INI (indent 4 spasi di dalam if menu Transport):
+    try:
+        if 'edited_s' in locals() and not edited_s.empty and "Lat" in edited_s.columns and "Lon" in edited_s.columns:
+            map_df = edited_s[["Lat","Lon"]].copy()
+            map_df["Lat"] = pd.to_numeric(map_df["Lat"], errors='coerce')
+            map_df["Lon"] = pd.to_numeric(map_df["Lon"], errors='coerce')
+            map_df = map_df.dropna()
+            if not map_df.empty:
+                st.map(map_df)
+                st.caption(f"GPS Live: {len(map_df)} titik - Ahmad Subarjo On the way Tanah Abang 12km")
+            else:
+                st.warning("GPS Lat/Lon belum valid - isi contoh -6.2088,106.8456 (UNIKA Atma Jaya)")
+                st.map(pd.DataFrame([{"Lat": -6.2088, "Lon": 106.8456}]))
+        else:
+            st.info("Belum ada data Transport GPS Live - isi Sopir + Muatan Bal Yard Kodi dulu")
+            st.map(pd.DataFrame([{"Lat": -6.2088, "Lon": 106.8456}]))
+    except Exception as e:
+        st.warning(f"Map fallback: {e}")
         st.map(pd.DataFrame([{"Lat": -6.2088, "Lon": 106.8456}]))
-else:
-    st.info("Belum ada data Transport GPS Live - isi dulu Sopir + Muatan Bal Yard Kodi di Gudang - Contoh: Ahmad Subarjo L300 12 Bal 270 Yd Tanah Abang")
-    # Fallback Jakarta
-    st.map(pd.DataFrame([{"Lat": -6.2088, "Lon": 106.8456}]))
-# === END FIX ===
+    # === END FIX V2 ===
+
 
 
 elif menu == "Market Tradisional Faktur Nota - Bal Yard Kodi ACTIVE":
