@@ -1,7 +1,5 @@
 streamlit
 pandas
-gTTS
 openpyxl
-xlsxwriter
-folium
-streamlit-folium
+requests
+gTTS
